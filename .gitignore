@@ -15,7 +15,8 @@ var
 sdist
 develop-eggs
 .installed.cfg
-lib
+#NIGGA WUTT? We have a lib-folder, dont need datt ignore
+#lib
 lib64
 __pycache__
 
