@@ -8,7 +8,7 @@ class Servo(object):
         self.range_max = 438   # 2ms wide pulse
         self.pwm_port = 0   # The port the servo can be accessed from
 
-    def pwm_range_adjust(self, percmin, permax):
+    def pwm_range_adjust(self, percmin, percmax):
         """allows to change the pwm-range
 
         Useful when not the full movement of the servo is used
@@ -57,8 +57,8 @@ class FrontLocker(Servo):
     def __init__(self):
         super(FrontLocker, self).__init__()
         # The servo needs to be operated at a smaller range
-        self.range_min = self.range_min * 1.1
-        self.range_max = self.range_max *
+        # self.range_min = self.range_min * 1.1
+        # self.range_max = self.range_max * 
         self.pwm_port = 9
         # This servos movement is quite restricted
         self.pwm_range_adjust(0.7, 0.9)

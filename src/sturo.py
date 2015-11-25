@@ -13,7 +13,6 @@ class Sturo(object):
         self.servo_steering1 = servos.Steering1()
         self.servo_steering2 = servos.Steering2()
         self.servo_esc = servos.Esc()
-        self.carspeed
 
 
     def set_speed(self, val):
@@ -22,7 +21,7 @@ class Sturo(object):
         Arguments:
         val -- between -100 and 100
         """
-        self.pwm.servo_set(self.servo_esc, (val + 100) / 200)
+        self.pwm.servo_set(self.servo_esc, (float(val) + 100) / 200)
 
     def set_steering(self, angle):
         """Changes the angle of the wheels
@@ -30,20 +29,16 @@ class Sturo(object):
         Arguments:
         angle -- between -45 and 45
         """
-        val = (angle + 45) / 90
+        val = (float(angle) + 45) / 90
         self.pwm.servo_set(self.servo_steering1, val)
         self.pwm.servo_set(self.servo_steering2, val)
 
     def set_transmission(self, val):
         """Sets the transmission
-
-        Arguments:
-        val -- either 1 for first or 2 for second gear
+Arguments:
+        val -- either 0 for first or 1 for second gear
         """
-        if val == 2:
-            print "For the safety of the car, second gear is not activated :P"
-        else:
-            self.pwm.servo_set(self.servo_transmission, 0)
+    	self.pwm.servo_set(self.servo_transmission, val)
 
     def set_front_locker(self, val):
         """Sets the front locker
@@ -66,3 +61,6 @@ class Sturo(object):
             self.pwm.servo_set(self.servo_rear_locker, 0)
         else:
             self.pwm.servo_set(self.servo_rear_locker, 1)
+
+sturo = Sturo()
+
