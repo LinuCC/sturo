@@ -14,7 +14,6 @@ class Sturo(object):
         self.servo_steering2 = servos.Steering2()
         self.servo_esc = servos.Esc()
 
-
     def set_speed(self, val):
         """Changes the speed of the car
 
@@ -61,6 +60,3 @@ Arguments:
             self.pwm.servo_set(self.servo_rear_locker, 0)
         else:
             self.pwm.servo_set(self.servo_rear_locker, 1)
-
-sturo = Sturo()
-
