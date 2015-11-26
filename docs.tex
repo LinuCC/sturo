@@ -1,0 +1,95 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[german]{babel}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[parfill]{parskip}
+\lstset{basicstyle=\ttfamily}
+\renewcommand{\lstlistingname}{Eintrag}
+
+\begin{document}
+
+\section{Komponenten}
+
+\section{Aufsetzen des Raspberry Pis}
+
+  Das Betriebssystem des Raspberry Pis benötigt etwas Zusatzsoftware, um über das I2C-Interface mit
+  dem Adafruit 16 Channel Servo Driver kommunizieren zu können.
+  Im folgenden wird von Raspbian als Betriebssystem ausgegangen.
+
+  \paragraph{I2C Software} Zuerst wird die Software zum Ansteuern des PWM-Moduls installiert:
+    \begin{lstlisting}[language=sh]
+sudo apt-get update
+sudo apt-get install python-smbus
+sudo apt-get install i2c-tools
+    \end{lstlisting}
+
+    Dann muss \lstinline{/etc/modprobe.d/raspi-blacklist.conf} überprüft werden.
+    Falls die Datei die Zeile \lstinline{blacklist i2c-bcm2708} enthält, mit \lstinline{#}
+    auskommentieren.
+    Nun noch in \lstinline{/etc/modules} die Zeilen
+    \begin{lstlisting}
+i2c-dev
+i2c-bcm2708
+    \end{lstlisting}
+
+    hinzufügen und den Raspberry Pi neustarten.
+
+    Jetzt wird der Adafruit 16 Channel Servo Driver an die GPIO-Pins des Raspberry Pis
+    angeschlossen.
+    Mithilfe von \lstinline{sudo i2cdetect -y 0} bzw. \lstinline{sudo i2cdetect -y 1} (je nach
+    Baureihe des Raspberry Pis) kann die Verbindung zwischen dem Servo Driver und dem Raspberry Pi
+    überprüft werden.
+
+  \paragraph{Sturo} Nun richten wir das Programm zur Steuerung des RC-Autos ein.
+
+    Die aktuelle Version des Programmes befindet sich momentan auf Github:
+
+    \begin{lstlisting}
+wget https://github.com/linucc/sturo
+cd sturo
+chmod +x sturo_start.sh
+    \end{lstlisting}
+
+    Das Programm Sturo benötigt Python 2.7 und muss für Funktionen wie Sensoren privilegiert
+    ausgeführt werden.
+    Nun soll der Raspberry Pi Sturo direkt nach dem Bootvorgang ausführen.
+
+    Dazu editiert man die Datei \lstinline{/etc/inittab}, sodass der Login beim Booten automatisch
+    ausgeführt wird:
+    
+    Die Zeile \lstinline{1:2345:respawn:/sbin/getty 115200 tty1} wird mit \lstinline{#}
+    auskommentiert.
+    Dann kann man direkt darunter in einer neuen Zeile diesen Code einfügen:
+    \begin{lstlisting}
+1:2345:respawn:/bin/login -f pi tty1 </dev/tty1 >/dev/tty1 2>&1
+    \end{lstlisting}
+    Beim Login ist man nun als Benutzer \lstinline{Pi} eingeloggt.
+
+    Jetzt wird die Skriptdatei aufgerufen, indem am Ende der Datei \lstinline{/etc/profile} die
+    Zeile
+    \begin{lstlisting}
+. /home/pi/sturo/sturo_start.sh
+    \end{lstlisting}
+    eingefügt wird.
+
+    Damit Sturo erweiterte Funktionen benutzen kann, muss es privilegiert mithilfe von
+    \lstinline{sudo} ausgeführt werden.
+    Hier wird momentan noch nach einem Passwort gefragt, sodass sich das Programm nicht automatisch
+    startet.
+
+    Um dies zu umgehen, können wir das \lstinline{setuid bit} auf den Nutzer \lstinline{root} setzen
+    oder die \lstinline{/etc/sudoers} Datei mithilfe von \lstinline{visudo} editieren und folgende
+    Zeile an das Ende fügen:
+    \begin{lstlisting}
+pi ALL=NOPASSWD: /usr/bin/python
+    \end{lstlisting}
+
+    Nun wird beim Ausführen von Python mit \lstinline{sudo} nicht mehr nach dem Passwort gefragt.
+
+    Das führt in Kombination mit dem Auto-Login zu einem sehr unsicheren System, was für dieses
+    Projekt aber erstmal unwichtig ist.
+
+\end{document}
