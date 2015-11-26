@@ -1,4 +1,4 @@
-import sturo
+import car_attributes
 import time
 
 class Driver(object):
@@ -17,12 +17,12 @@ class Driver(object):
     	RESET = 4
 
     def __init__(self):
-        self.sturo = sturo.Sturo()
-        self.sturo.set_speed(0)
-        self.sturo.set_steering(0)
-        self.sturo.set_transmission(0)
-        self.sturo.set_front_locker(0)
-        self.sturo.set_rear_locker(0)
+        self.car_atributes = car_atributes.Sturo()
+        self.car_atributes.set_speed(0)
+        self.car_atributes.set_steering(0)
+        self.car_atributes.set_transmission(0)
+        self.car_atributes.set_front_locker(0)
+        self.car_atributes.set_rear_locker(0)
         self.drive_mode = self.Mode.FORWARD
 
     def auto_drive(self):
@@ -36,25 +36,25 @@ class Driver(object):
 
     def drive(self, mode):
         if mode == self.Mode.FORWARD:
-            self.sturo.set_speed(self.Speed.FAST)
-            self.sturo.set_steering(0)
+            self.car_atributes.set_speed(self.Speed.FAST)
+            self.car_atributes.set_steering(0)
         if mode == self.Mode.SLIGHT_ADJUST_RIGHT:
-            self.sturo.set_speed(self.Speed.NORMAL)
-            self.sturo.set_steering(20)
+            self.car_atributes.set_speed(self.Speed.NORMAL)
+            self.car_atributes.set_steering(20)
         if mode == self.Mode.ADJUST_RIGHT:
-            self.sturo.set_speed(self.Speed.SLOW)
-            self.sturo.set_steering(45)
+            self.car_atributes.set_speed(self.Speed.SLOW)
+            self.car_atributes.set_steering(45)
         if mode == self.Mode.STOP:
-            self.sturo.set_speed(self.Speed.STOP)
-            self.sturo.set_steering(0)
+            self.car_atributes.set_speed(self.Speed.STOP)
+            self.car_atributes.set_steering(0)
         if mode == self.Mode.PAUSE:
-            self.sturo.set_speed(self.Speed.STOP)
-            self.sturo.set_steering(0)
+            self.car_atributes.set_speed(self.Speed.STOP)
+            self.car_atributes.set_steering(0)
             time.sleep(5)
 
     def reset_car(self):
-        self.sturo_set_speed(self.Speed.REVERSE)
-        self.sturo_set_steering(0)
+        self.car_atributes.set_speed(self.Speed.REVERSE)
+        self.car_atributes.set_steering(0)
         time.sleep(2)
 
 driver = Driver()
