@@ -15,7 +15,7 @@ var
 sdist
 develop-eggs
 .installed.cfg
-#NIGGA WUTT? We have a lib-folder, dont need datt ignore
+#We have a lib-folder, dont need datt ignore
 #lib
 lib64
 __pycache__
@@ -35,3 +35,11 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Latex
+
+.aux
+.fdb_latexmk
+.fls
+.log
+.synctex.gz
