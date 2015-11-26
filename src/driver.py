@@ -52,21 +52,23 @@ class Driver(object):
             self.car_attributes.set_speed(self.Speed.STOP)
             self.car_attributes.set_steering(0)
             time.sleep(5)
+        if mode == self.Mode.REVERSE:
+            self.reset_car()
 
     def reset_car(self):
         self.car_attributes.set_speed(self.Speed.REVERSE)
         self.car_attributes.set_steering(0)
-        time.sleep(2)
+        time.sleep(3)
 
     def figure_eight(self):
 	while(True):
             self.car_attributes.set_speed(self.Speed.FAST)
             self.car_attributes.set_steering(45)
-            time.sleep(4)
+            time.sleep(3.3)
             self.car_attributes.set_steering(0)
             time.sleep(1)
             self.car_attributes.set_steering(-45)
-            time.sleep(4)
+            time.sleep(3.3)
             self.car_attributes.set_steering(0)
             time.sleep(1)
             self.car_attributes.set_speed(self.Speed.STOP)
