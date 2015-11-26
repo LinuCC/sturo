@@ -1,4 +1,4 @@
-import driver.Driver as Driver
+import driver
 
-driver = Driver()
-driver.car_attributes.set_steering(10)
+car_driver = driver.Driver()
+car_driver.car_attributes.set_steering(10)
