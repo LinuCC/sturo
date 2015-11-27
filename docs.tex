@@ -13,11 +13,45 @@
 
 \section{Komponenten}
 
+  \subsection{Traxxas Summit}
+
+    Der Traxxas Summit ist ein per Funk gesteuertes Modell-Auto vom Hersteller Traxxas.
+    Es besitzt unter anderem Servos zum Ansteuern der Funktionen und einen mit PWM gesteuerten ESC
+    mit eingebautem BEC (leitet Strom des ESCs weiter an die Servos).
+
+    Um diesen zu automatisieren, wird das Empfänger-Modul, das die Funkbefehle zur Steuerung des
+    Autos empfängt, entfernt.
+    Die Anschlüsse, die von dem Modul zum ESC sowie zu den Servos führten, können direkt für den
+    Adafruit Servo Driver benutzt werden.
+
+    Einige Servos können übersteuert werden weil daran angeschlossene Komponenten nur einen Teil
+    des Bewegungsraumes benutzen und blockieren / stoppen wenn der Servo sich darüber hinaus
+    bewegt.
+    Hier muss für die einzelnen Servos software-seitig der Spielraum der PWM-Signale ausgetestet
+    werden, was im Sturo-Programm für den Traxxas Summit bereits geschehen ist.
+
+  \subsection{Raspberry Pi}
+
+    Der Rasbperry Pi ist mit dem Adafruit Servo Driver verbunden und führt das Programm Sturo aus,
+    das eine Automatisierung der Fahrt des Autos ermöglicht.
+    Es können noch weitere Komponenten, wie zum Beispiel ein Ultraschall-Sensor, verbunden werden.
+
+  \subsection{Adafruit 16-Channel 12-Bit Servo Driver}
+
+    Dieser Servo Driver \cite{adafruitmod} erlaubt die Kontrolle der einzelnen
+    Servos und des ESCs mithilfe von PWM.
+    Er wird über I2C an den Raspberry Pi angeschlossen und erhält von diesem die
+    Ansteuerungs-Befehle.
+
+  \subsection{So ein unheiliger Voltage-Konverter fuer den RPi}
+
 \section{Aufsetzen des Raspberry Pis}
 
   Das Betriebssystem des Raspberry Pis benötigt etwas Zusatzsoftware, um über das I2C-Interface mit
   dem Adafruit 16 Channel Servo Driver kommunizieren zu können.
   Im folgenden wird von Raspbian als Betriebssystem ausgegangen.
+  Dieses kann von \lstinline{https://www.raspberrypi.org/} kostenlos heruntergeladen und dann auf
+  die SD-Karte für den Raspberry Pi überspielt werden.
 
   \paragraph{I2C Software} Zuerst wird die Software zum Ansteuern des PWM-Moduls installiert:
     \begin{lstlisting}[language=sh]
@@ -41,7 +75,7 @@ i2c-bcm2708
     angeschlossen.
     Mithilfe von \lstinline{sudo i2cdetect -y 0} bzw. \lstinline{sudo i2cdetect -y 1} (je nach
     Baureihe des Raspberry Pis) kann die Verbindung zwischen dem Servo Driver und dem Raspberry Pi
-    überprüft werden.
+    überprüft werden.\cite{adafruitlearn}
 
   \paragraph{Sturo} Nun richten wir das Programm zur Steuerung des RC-Autos ein.
 
@@ -59,14 +93,14 @@ chmod +x sturo_start.sh
 
     Dazu editiert man die Datei \lstinline{/etc/inittab}, sodass der Login beim Booten automatisch
     ausgeführt wird:
-    
+
     Die Zeile \lstinline{1:2345:respawn:/sbin/getty 115200 tty1} wird mit \lstinline{#}
     auskommentiert.
     Dann kann man direkt darunter in einer neuen Zeile diesen Code einfügen:
     \begin{lstlisting}
 1:2345:respawn:/bin/login -f pi tty1 </dev/tty1 >/dev/tty1 2>&1
     \end{lstlisting}
-    Beim Login ist man nun als Benutzer \lstinline{Pi} eingeloggt.
+    Beim Login ist man nun als Benutzer \lstinline{Pi} eingeloggt.\cite{opentech}
 
     Jetzt wird die Skriptdatei aufgerufen, indem am Ende der Datei \lstinline{/etc/profile} die
     Zeile
@@ -91,5 +125,27 @@ pi ALL=NOPASSWD: /usr/bin/python
 
     Das führt in Kombination mit dem Auto-Login zu einem sehr unsicheren System, was für dieses
     Projekt aber erstmal unwichtig ist.
+
+  \section{Code-Stuffz}
+
+  \section{Abkürzungen}
+    \begin{lstlisting}
+ESC      Electronic Speed Controller
+BEC      Battery elimination unit
+PWM      Pulse-width modulation
+I2C      Inter-Integrated Circuit
+    \end{lstlisting}
+
+  \begin{thebibliography}{9}
+    \bibitem{opentech}
+      http://opentechguides.com/how-to/article/raspberry-pi/5/raspberry-pi-auto-start.html,
+      Zuletzt erreicht am: 27.11.2015
+    \bibitem{adafruitlearn}
+      https://learn.adafruit.com/adafruit-16-channel-servo-driver-with-raspberry-pi,
+      Zuletzt erreicht am: 27.11.2015
+    \bibitem{adafruitmod}
+      https://www.adafruit.com/product/815,
+      Zuletzt erreicht am: 27.11.2015
+  \end{thebibliography}
 
 \end{document}
