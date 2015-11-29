@@ -6,6 +6,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage[parfill]{parskip}
+\usepackage{graphicx}
 \lstset{basicstyle=\ttfamily}
 \renewcommand{\lstlistingname}{Eintrag}
 
@@ -25,6 +26,12 @@
 
   \subsection{Traxxas Summit}
 
+    \begin{figure}[ht!]
+      \centering
+      \includegraphics[width=100mm]{pics/hardware.jpg}
+      \caption{Der Traxxas Summit mit den eingebauten Komponenten}
+    \end{figure}
+
     Der Traxxas Summit ist ein per Funk gesteuertes Modell-Auto vom Hersteller
     Traxxas.
     Es besitzt unter anderem Servos zum Ansteuern der Funktionen und einen mit
@@ -43,7 +50,15 @@
     PWM-Signale ausgetestet werden, was im Sturo-Programm für den Traxxas Summit
     bereits geschehen ist.
 
+    \newpage
+
   \subsection{Raspberry Pi}
+
+    \begin{figure}[ht!]
+      \centering
+      \includegraphics[width=100mm]{pics/rpi.jpg}
+      \caption{Der Raspberry Pi mit den GPIO-Anschlüssen des Servo Drivers}
+    \end{figure}
 
     Der Raspberry Pi ist ein günstiger Mini-Computer.
     Er ist mit dem Adafruit Servo Driver verbunden und führt das Programm Sturo
@@ -52,6 +67,12 @@
     mit dem Raspberry Pi verbunden werden.
 
   \subsection{Adafruit 16-Channel 12-Bit Servo Driver}
+
+    \begin{figure}[ht!]
+      \centering
+      \includegraphics[width=100mm]{pics/servo_driver.jpg}
+      \caption{Der Servo Driver, eingelassen in die Box für den Empfänger}
+    \end{figure}
 
     Dieser Servo Driver \cite{adafruitmod} erlaubt die Kontrolle der einzelnen
     Servos und des ESCs mithilfe von PWM.
@@ -76,6 +97,12 @@ Port 10   Hintere Differentialsperre
     können beliebig auf die verbleibenden Ports verteilt werden.
 
   \subsection{Spannungswandler}
+
+    \begin{figure}[ht!]
+      \centering
+      \includegraphics[width=100mm]{pics/spannungswandler.jpg}
+      \caption{Der Spannungswandler mit Micro-USB Anschluss links abgehend}
+    \end{figure}
 
     Der Spannungswandler wandelt die Spannung (ungefähr 6V), die der BEC aus den
     Akkus des Autos den Servos zur Verfügung stellt, in eine für den
@@ -387,13 +414,22 @@ class FrontLocker(Servo):
     Ich habe jetzt eine bessere Vorstellung von der Komplexität des
     Zusammenspiels verschiedener Komponenten.
 
-\section{Abkürzungen}
+\newpage
+
+\section*{Abkürzungen}
   \begin{lstlisting}
 ESC      Electronic Speed Controller
 BEC      Battery elimination unit
 PWM      Pulse-width modulation
 I2C      Inter-Integrated Circuit
   \end{lstlisting}
+
+\section*{Weiteres}
+
+  Das Programm befindet sich auf einer diesem Dokument beigefügten CD.
+
+  Das Programm und diese Dokumentation sind auch unter der Webseite \newline
+  \lstinline{http://github.com/linucc/sturo} zu finden.
 
 \begin{thebibliography}{9}
   \bibitem{opentech}
