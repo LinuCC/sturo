@@ -45,10 +45,11 @@
 
   \subsection{Raspberry Pi}
 
-    Der Rasbperry Pi ist mit dem Adafruit Servo Driver verbunden und führt das
-    Programm Sturo aus, das eine Automatisierung der Fahrt des Autos ermöglicht.
+    Der Raspberry Pi ist ein günstiger Mini-Computer.
+    Er ist mit dem Adafruit Servo Driver verbunden und führt das Programm Sturo
+    aus, das eine Automatisierung der Fahrt des Autos ermöglicht.
     Es können noch weitere Komponenten, wie zum Beispiel ein Ultraschall-Sensor,
-    verbunden werden.
+    mit dem Raspberry Pi verbunden werden.
 
   \subsection{Adafruit 16-Channel 12-Bit Servo Driver}
 
@@ -212,11 +213,11 @@ pi ALL=NOPASSWD: /usr/bin/python
     Weiterhin wurde das Modul \lstinline{usonic} eingebunden, um die Messdaten
     aus dem Ultraschallsensor abzulesen. \cite{ultrasonic}
 
-    Der Code dieser Module ist unter \lstinline{src/lib} zu finden.
+    Der Code dieser Module ist unter \lstinline{lib} zu finden.
 
   \subsection{ServoControl}
 
-    Das \lstinline{src/ServoControl} Modul abstrahiert die Arbeit mit der PWM.
+    Das \lstinline{ServoControl} Modul abstrahiert die Arbeit mit der PWM.
 
     Es enthält zum einen die Klasse \lstinline{SummitPWM}, die die Attribute des
     Adafruit Servo Drivers festlegt und anhand eines übergebenen
@@ -309,6 +310,83 @@ class FrontLocker(Servo):
 
 \section{Herausforderungen}
 
+  \subsection{Betrieb des Motors}
+
+    Anfangs war es nicht möglich, den ESC so anzusteuern, dass dieser wiederum
+    den Motor aktiviert.
+    Der Grund dafür ist ein Sicherheitsfeature welches direkt in den ESC
+    eingebaut wurde.
+    Es erwartet nach dem Einschalten ein PWM-Signal mit einer Pulslänge von
+    50\% der gesamten Pulslängenreichweite (1.5ms) und schaltet dann erst in
+    einen Modus, mit dem die Geschwindigkeit des Fahrzeuges gesetzt werden kann.
+
+    Dies haben die Spezifikationen von Traxxas über den Traxxas Summit nicht
+    angegeben.
+    Sie haben jedoch die Taktung des PWM-Signals für den Motor auf mehr als das
+    doppelte der normalen Taktung (1500 Hz) angegeben. \cite{traxxasspecs}
+    [Stand Januar 2014, inzwischen nicht mehr auf der Webseite]
+
+    Dies war, wie sich im Nachhinein herausstellte, für die direkte Ansteuerung
+    des Motors vom ESC aus gemeint, und nicht für die für das Projekt nötige
+    Ansteuerung des ESCs selber.
+
+  \subsection{Korruption der SD-Karte}
+
+    Der Raspberry Pi benutzt eine SD-Karte, um das Betriebssystem zu booten und
+    das Programm Sturo automatisch zu starten.
+    Wenn dessen Stromversorgung an den Traxxas Summit eigenen Akkus über den
+    eingebauten Spannungswandler angeschlossen ist, kann dieser mit dem
+    Einschalten des Fahrzeuges ohne Peripherie-Geräte mitbooten und es
+    kontrollieren.
+
+    Damit ist der Betrieb des Raspberry Pis auch von der Leistung der Akkus
+    abhängig.
+    Sobald die Spannung stark abfällt, kann es sein dass die
+    Spannungsschwankungen zu stark werden und der Raspberry Pi abstürzt.
+    Außerdem hat er keinen Ausschaltknopf, sodass man ohne extra Hardware
+    gezwungen ist die Stromzufuhr der Akkus abzuschalten und den Pi damit auch
+    abstürzen lässt, weil man Ihn nicht sauber herunterfahren lassen kann.
+
+    Dies hat einmal dazu geführt, dass das Betriebssystem von der SD-Karte nicht
+    mehr gebootet hat und alle 3 Backups entweder bereits korrumpiert waren
+    oder fehlten.
+    Die Software Sturo ließe sich leicht wieder aufspielen, allerdings müssen
+    auch Betriebssystem-eigene Konfigurationen verändert werden, was viel Zeit
+    gekostet hat.
+    In Retrospektive hätte ein Skript, dass die in Kapitel 2 genannten
+    Änderungen automatisiert, viel Zeit und Nerven schonen können.
+
+  \subsection{Hardware des Traxxas Summit}
+
+    Die Hardware des Fahrzeuges ist auf Fernsteuerung ausgelegt.
+    Es hat, neben der Low Voltage Warnung, keine Sensoren zum Messen der
+    Geschwindigkeit oder anderer Eigenschaften der Komponenten.
+
+    Die Leistung der Servos und damit der Einschlagwinkel der Lenkung und die
+    Geschwindigkeit des Traxxas Summit hängt von der Leistung der Akkus ab,
+    die sich während der Laufzeit vermindert.
+    Eine vorhersagbare Strecke ohne Sensoren kann man also nicht abfahren, man
+    ist vollständig auf die eigenen Sensoren angewiesen.
+    Dies macht es schwierig, einigermaßen umweltunabhängige Strecken
+    vorzuprogrammieren die das Auto abfahren kann.
+
+  \section{Epilog}
+
+    Das Projekt ist eine interessante, lehrreiche Erfahrung.
+    Es war eine Herausforderung für zwei in der Elektrotechnik unerfahrene
+    Studenten, das sich leider zeitlich in die Länge gezogen hat.
+
+    Eine zeitliche Dokumentation des Hardware-Prozesses sowie Automatisierungen
+    hinsichtlich der Software-Einrichtung hätten einiges an Zeit gespart, die
+    man besser hätte nutzen können.
+
+    Mir persönlich hat das Projekt insgesamt gesehen viel Spaß gemacht, auch
+    wenn manche Probleme mir tagelang Kopfzerbrechen bereitet haben.
+    Das die Kombination der einzelnen Komponenten am Ende tatsächlich
+    einigermaßen funktioniert hat, hat mich etwas überrascht.
+    Ich habe jetzt eine bessere Vorstellung von der Komplexität des
+    Zusammenspiels verschiedener Komponenten.
+
 \section{Abkürzungen}
   \begin{lstlisting}
 ESC      Electronic Speed Controller
@@ -329,6 +407,9 @@ I2C      Inter-Integrated Circuit
     Zuletzt erreicht am: 27.11.2015
   \bibitem{ultrasonic}
     http://www.bytecreation.com/blog/2013/10/13/raspberry-pi-ultrasonic-sensor-hc-sr04,
+    Zuletzt erreicht am: 28.11.2015
+  \bibitem{traxxasspecs}
+    https://traxxas.com/products/models/electric/56076-1summit?t=specs,
     Zuletzt erreicht am: 28.11.2015
 \end{thebibliography}
 
