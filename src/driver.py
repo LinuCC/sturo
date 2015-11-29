@@ -8,7 +8,7 @@ class Driver(object):
         SLOW = 15
         NORMAL = 25
         FAST = 35
-        REVERSE = -20
+        REVERSE = -15
 
     class Mode(object):
         FORWARD = 1
@@ -56,6 +56,8 @@ class Driver(object):
             self.reset_car()
 
     def reset_car(self):
+        self.car_attributes.set_speed(0)
+        time.sleep(1)
         self.car_attributes.set_speed(self.Speed.REVERSE)
         self.car_attributes.set_steering(0)
         time.sleep(3)

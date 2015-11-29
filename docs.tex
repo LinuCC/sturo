@@ -43,7 +43,55 @@
     Er wird über I2C an den Raspberry Pi angeschlossen und erhält von diesem die
     Ansteuerungs-Befehle.
 
-  \subsection{So ein unheiliger Voltage-Konverter fuer den RPi}
+    Er besitzt 16 Anschlüsse (Ports) für jeweils einen Servo.
+    Diese sind von 0 bis 15 durchnummeriert und können in der Software angesprochen werden.
+    Für Sturo sind die folgenden Anschlüsse belegt:
+
+    \begin{lstlisting}
+Port 0    Lenkung Servo 1
+Port 1    Lenkung Servo 2
+Port 4    ESC (Geschwindigkeit)
+Port 8    Gangschaltung
+Port 9    Vordere Differentialsperre
+Port 10   Hintere Differentialsperre
+    \end{lstlisting}
+
+    Weitere Anschlüsse, wie z.B. die Stromversorgung für den Spannungswandler, können beliebig auf
+    die verbleibenden Ports verteilt werden.
+
+  \subsection{Spannungswandler}
+
+    Der Spannungswandler wandelt die Spannung (ungefähr 6V), die der BEC aus den Akkus des Autos den
+    Servos zur Verfügung stellt, in eine für den Raspberry Pi nutzbare Spannung (5V) um.
+
+    Im Projekt haben wir den BenQ DC 12V to 5V/3.3V Converter benutzt.
+    Der 12V-Eingang wird an einen \lstinline{V+}-Anschluss am Servo Driver angeschlossen.
+    Um Spannungsschwankungen durch die unterschiedliche Servo-Belastung zu minimieren, wird hier
+    noch ein Kondensator dazwischen eingefügt.
+    Der \lstinline{GND} Eingang wird ebenfalls an einen \lstinline{GND}-Anschluss (für die Servos,
+    nicht dem Raspberry Pi) des Servo Drivers angeschlossen.
+
+    Um den Spannungswandler an den Raspberry Pi anzuschließen, wurde ein Mikro-USB Kabel an einer
+    Seite aufgeschnitten um das rote Kabel an den 5V Ausgang und das schwarze Kabel an den
+    \lstinline{GND} Ausgang des Spannungswandlers anzuschließen.
+
+    Nun wird der Raspberry Pi über den normalen Mikro-USB Anschluss mit Strom versorgt.
+
+  \subsection{Ultraschallsensor}
+
+    Der Ultraschallsensor erlaubt dem Programm die Entdeckung von Hindernissen und die korrekte
+    Reaktion darauf.
+    Das Projekt benutzt den Ultraschallsensor mit der Nummer \lstinline{HC-SR04}.
+
+    Der Sensor hat vier Anschlüsse;
+    \lstinline{GND} und \lstinline{VCC} können direkt an den Raspberry Pi angeschlossen werden.
+    \lstinline{Echo} und \lstinline{Trig} können an beliebige GPIO Anschlüsse angebracht werden,
+    Sturo geht jedoch davon aus das sie jeweils auf \lstinline{GPIO 27} und \lstinline{GPIO 22}
+    angeschlossen sind.
+
+    Sollte VCC an den 5V Anschluss des Raspberry Pis angeschlossen sein (Die 3,3V werden für I2C
+    benutzt), muss man noch einen 1K Widerstand zwischen \lstinline{Echo} und den Raspberry Pi
+    anbringen.
 
 \section{Aufsetzen des Raspberry Pis}
 
@@ -111,8 +159,8 @@ chmod +x sturo_start.sh
 
     Damit Sturo erweiterte Funktionen benutzen kann, muss es privilegiert mithilfe von
     \lstinline{sudo} ausgeführt werden.
-    Hier wird momentan noch nach einem Passwort gefragt, sodass sich das Programm nicht automatisch
-    startet.
+    Hier wird momentan unter Umständen noch nach einem Passwort gefragt, sodass sich das Programm
+    nicht automatisch startet.
 
     Um dies zu umgehen, können wir das \lstinline{setuid bit} auf den Nutzer \lstinline{root} setzen
     oder die \lstinline{/etc/sudoers} Datei mithilfe von \lstinline{visudo} editieren und folgende
@@ -126,26 +174,28 @@ pi ALL=NOPASSWD: /usr/bin/python
     Das führt in Kombination mit dem Auto-Login zu einem sehr unsicheren System, was für dieses
     Projekt aber erstmal unwichtig ist.
 
-  \section{Code-Stuffz}
+\section{Code-Stuffz}
 
-  \section{Abkürzungen}
-    \begin{lstlisting}
+\section{Herausforderungen}
+
+\section{Abkürzungen}
+  \begin{lstlisting}
 ESC      Electronic Speed Controller
 BEC      Battery elimination unit
 PWM      Pulse-width modulation
 I2C      Inter-Integrated Circuit
-    \end{lstlisting}
+  \end{lstlisting}
 
-  \begin{thebibliography}{9}
-    \bibitem{opentech}
-      http://opentechguides.com/how-to/article/raspberry-pi/5/raspberry-pi-auto-start.html,
-      Zuletzt erreicht am: 27.11.2015
-    \bibitem{adafruitlearn}
-      https://learn.adafruit.com/adafruit-16-channel-servo-driver-with-raspberry-pi,
-      Zuletzt erreicht am: 27.11.2015
-    \bibitem{adafruitmod}
-      https://www.adafruit.com/product/815,
-      Zuletzt erreicht am: 27.11.2015
-  \end{thebibliography}
+\begin{thebibliography}{9}
+  \bibitem{opentech}
+    http://opentechguides.com/how-to/article/raspberry-pi/5/raspberry-pi-auto-start.html,
+    Zuletzt erreicht am: 27.11.2015
+  \bibitem{adafruitlearn}
+    https://learn.adafruit.com/adafruit-16-channel-servo-driver-with-raspberry-pi,
+    Zuletzt erreicht am: 27.11.2015
+  \bibitem{adafruitmod}
+    https://www.adafruit.com/product/815,
+    Zuletzt erreicht am: 27.11.2015
+\end{thebibliography}
 
 \end{document}

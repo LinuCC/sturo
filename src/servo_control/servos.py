@@ -49,6 +49,7 @@ class RearLocker(Servo):
     def __init__(self):
         super(RearLocker, self).__init__()
         self.pwm_port = 10
+        # This servos movement is quite restricted
         self.pwm_range_adjust(1, 0.9)
 
 
@@ -56,9 +57,6 @@ class FrontLocker(Servo):
     """The front locker servo of the Summit"""
     def __init__(self):
         super(FrontLocker, self).__init__()
-        # The servo needs to be operated at a smaller range
-        # self.range_min = self.range_min * 1.1
-        # self.range_max = self.range_max * 
         self.pwm_port = 9
         # This servos movement is quite restricted
         self.pwm_range_adjust(0.7, 0.9)
@@ -69,6 +67,6 @@ class Transmission(Servo):
     def __init__(self):
         super(Transmission, self).__init__()
         self.pwm_port = 8
-        # Not really sure if this keeps the transmission in place, but this
+        # Not really sure if this keeps the transmission in place even when going fast, but this
         # should do it without putting too much pressure on the servo
         self.pwm_range_adjust(0.9, 0.8)
