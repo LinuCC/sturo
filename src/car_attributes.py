@@ -34,9 +34,13 @@ class CarAttributes(object):
 
     def set_transmission(self, val):
         """Sets the transmission
-Arguments:
+
+        Arguments:
         val -- either 0 for first or 1 for second gear
         """
+        if val > 0:
+            print('Sorry, second gear not activated')
+            return
     	self.pwm.servo_set(self.servo_transmission, val)
 
     def set_front_locker(self, val):

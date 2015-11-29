@@ -10,31 +10,45 @@
 \renewcommand{\lstlistingname}{Eintrag}
 
 \begin{document}
+\title{Entwicklung einer Hard- und Softwarebasis zur Automatisierung des Traxxas Summit}
+\author{Pascal Ernst\\
+  70302367 \\
+  Ostfalia Hochschule für angewandte Wissenschaften \\
+  Projektrealisierung mit Hilfe von: \\
+  Edgar Wendler, Dennis Gieger}
+\date{November 2015}
+\maketitle
+
+\newpage
 
 \section{Komponenten}
 
   \subsection{Traxxas Summit}
 
-    Der Traxxas Summit ist ein per Funk gesteuertes Modell-Auto vom Hersteller Traxxas.
-    Es besitzt unter anderem Servos zum Ansteuern der Funktionen und einen mit PWM gesteuerten ESC
-    mit eingebautem BEC (leitet Strom des ESCs weiter an die Servos).
+    Der Traxxas Summit ist ein per Funk gesteuertes Modell-Auto vom Hersteller
+    Traxxas.
+    Es besitzt unter anderem Servos zum Ansteuern der Funktionen und einen mit
+    PWM gesteuerten ESC mit eingebautem BEC (leitet Strom des ESCs weiter an die
+    Servos).
 
-    Um diesen zu automatisieren, wird das Empfänger-Modul, das die Funkbefehle zur Steuerung des
-    Autos empfängt, entfernt.
-    Die Anschlüsse, die von dem Modul zum ESC sowie zu den Servos führten, können direkt für den
-    Adafruit Servo Driver benutzt werden.
+    Um diesen zu automatisieren, wird das Empfänger-Modul, das die Funkbefehle
+    zur Steuerung des Autos empfängt, entfernt.
+    Die Anschlüsse, die von dem Modul zum ESC sowie zu den Servos führten,
+    können direkt für den Adafruit Servo Driver benutzt werden.
 
-    Einige Servos können übersteuert werden weil daran angeschlossene Komponenten nur einen Teil
-    des Bewegungsraumes benutzen und blockieren / stoppen wenn der Servo sich darüber hinaus
-    bewegt.
-    Hier muss für die einzelnen Servos software-seitig der Spielraum der PWM-Signale ausgetestet
-    werden, was im Sturo-Programm für den Traxxas Summit bereits geschehen ist.
+    Einige Servos können übersteuert werden weil daran angeschlossene
+    Komponenten nur einen Teil des Bewegungsraumes benutzen und blockieren /
+    stoppen wenn der Servo sich darüber hinaus bewegt.
+    Hier muss für die einzelnen Servos software-seitig der Spielraum der
+    PWM-Signale ausgetestet werden, was im Sturo-Programm für den Traxxas Summit
+    bereits geschehen ist.
 
   \subsection{Raspberry Pi}
 
-    Der Rasbperry Pi ist mit dem Adafruit Servo Driver verbunden und führt das Programm Sturo aus,
-    das eine Automatisierung der Fahrt des Autos ermöglicht.
-    Es können noch weitere Komponenten, wie zum Beispiel ein Ultraschall-Sensor, verbunden werden.
+    Der Rasbperry Pi ist mit dem Adafruit Servo Driver verbunden und führt das
+    Programm Sturo aus, das eine Automatisierung der Fahrt des Autos ermöglicht.
+    Es können noch weitere Komponenten, wie zum Beispiel ein Ultraschall-Sensor,
+    verbunden werden.
 
   \subsection{Adafruit 16-Channel 12-Bit Servo Driver}
 
@@ -44,7 +58,8 @@
     Ansteuerungs-Befehle.
 
     Er besitzt 16 Anschlüsse (Ports) für jeweils einen Servo.
-    Diese sind von 0 bis 15 durchnummeriert und können in der Software angesprochen werden.
+    Diese sind von 0 bis 15 durchnummeriert und können in der Software
+    angesprochen werden.
     Für Sturo sind die folgenden Anschlüsse belegt:
 
     \begin{lstlisting}
@@ -56,52 +71,62 @@ Port 9    Vordere Differentialsperre
 Port 10   Hintere Differentialsperre
     \end{lstlisting}
 
-    Weitere Anschlüsse, wie z.B. die Stromversorgung für den Spannungswandler, können beliebig auf
-    die verbleibenden Ports verteilt werden.
+    Weitere Anschlüsse, wie z.B. die Stromversorgung für den Spannungswandler,
+    können beliebig auf die verbleibenden Ports verteilt werden.
 
   \subsection{Spannungswandler}
 
-    Der Spannungswandler wandelt die Spannung (ungefähr 6V), die der BEC aus den Akkus des Autos den
-    Servos zur Verfügung stellt, in eine für den Raspberry Pi nutzbare Spannung (5V) um.
+    Der Spannungswandler wandelt die Spannung (ungefähr 6V), die der BEC aus den
+    Akkus des Autos den Servos zur Verfügung stellt, in eine für den
+    Raspberry Pi nutzbare Spannung (5V) um.
 
     Im Projekt haben wir den BenQ DC 12V to 5V/3.3V Converter benutzt.
-    Der 12V-Eingang wird an einen \lstinline{V+}-Anschluss am Servo Driver angeschlossen.
-    Um Spannungsschwankungen durch die unterschiedliche Servo-Belastung zu minimieren, wird hier
-    noch ein Kondensator dazwischen eingefügt.
-    Der \lstinline{GND} Eingang wird ebenfalls an einen \lstinline{GND}-Anschluss (für die Servos,
-    nicht dem Raspberry Pi) des Servo Drivers angeschlossen.
+    Der 12V-Eingang wird an einen \lstinline{V+}-Anschluss am Servo Driver
+    angeschlossen.
+    Um Spannungsschwankungen durch die unterschiedliche Servo-Belastung zu
+    minimieren, wird hier noch ein Kondensator dazwischen eingefügt.
+    Der \lstinline{GND} Eingang wird ebenfalls an einen
+    \lstinline{GND}-Anschluss (für die Servos, nicht dem Raspberry Pi) des Servo
+    Drivers angeschlossen.
 
-    Um den Spannungswandler an den Raspberry Pi anzuschließen, wurde ein Mikro-USB Kabel an einer
-    Seite aufgeschnitten um das rote Kabel an den 5V Ausgang und das schwarze Kabel an den
-    \lstinline{GND} Ausgang des Spannungswandlers anzuschließen.
+    Um den Spannungswandler an den Raspberry Pi anzuschließen, wurde ein
+    Mikro-USB Kabel an einer Seite aufgeschnitten um das rote Kabel an den 5V
+    Ausgang und das schwarze Kabel an den \lstinline{GND} Ausgang des
+    Spannungswandlers anzuschließen.
 
-    Nun wird der Raspberry Pi über den normalen Mikro-USB Anschluss mit Strom versorgt.
+    Nun wird der Raspberry Pi über den normalen Mikro-USB Anschluss mit Strom
+    versorgt.
 
   \subsection{Ultraschallsensor}
 
-    Der Ultraschallsensor erlaubt dem Programm die Entdeckung von Hindernissen und die korrekte
-    Reaktion darauf.
-    Das Projekt benutzt den Ultraschallsensor mit der Nummer \lstinline{HC-SR04}.
+    Der Ultraschallsensor erlaubt dem Programm die Entdeckung von Hindernissen
+    und die korrekte Reaktion darauf.
+    Das Projekt benutzt den Ultraschallsensor mit der Nummer
+    \lstinline{HC-SR04}.
 
     Der Sensor hat vier Anschlüsse;
-    \lstinline{GND} und \lstinline{VCC} können direkt an den Raspberry Pi angeschlossen werden.
-    \lstinline{Echo} und \lstinline{Trig} können an beliebige GPIO Anschlüsse angebracht werden,
-    Sturo geht jedoch davon aus das sie jeweils auf \lstinline{GPIO 27} und \lstinline{GPIO 22}
-    angeschlossen sind.
+    \lstinline{GND} und \lstinline{VCC} können direkt an den Raspberry Pi
+    angeschlossen werden.
+    \lstinline{Echo} und \lstinline{Trig} können an beliebige GPIO Anschlüsse
+    angebracht werden, Sturo geht jedoch davon aus das sie jeweils auf
+    \lstinline{GPIO 27} und \lstinline{GPIO 22} angeschlossen sind.
 
-    Sollte VCC an den 5V Anschluss des Raspberry Pis angeschlossen sein (Die 3,3V werden für I2C
-    benutzt), muss man noch einen 1K Widerstand zwischen \lstinline{Echo} und den Raspberry Pi
-    anbringen.
+    Sollte VCC an den 5V Anschluss des Raspberry Pis angeschlossen sein
+    (Die 3,3V werden für I2C benutzt), muss man noch einen 1K Widerstand
+    zwischen \lstinline{Echo} und den Raspberry Pi anbringen.
 
 \section{Aufsetzen des Raspberry Pis}
 
-  Das Betriebssystem des Raspberry Pis benötigt etwas Zusatzsoftware, um über das I2C-Interface mit
-  dem Adafruit 16 Channel Servo Driver kommunizieren zu können.
+  Das Betriebssystem des Raspberry Pis benötigt etwas Zusatzsoftware, um über
+  das I2C-Interface mit dem Adafruit 16 Channel Servo Driver kommunizieren zu
+  können.
   Im folgenden wird von Raspbian als Betriebssystem ausgegangen.
-  Dieses kann von \lstinline{https://www.raspberrypi.org/} kostenlos heruntergeladen und dann auf
-  die SD-Karte für den Raspberry Pi überspielt werden.
+  Dieses kann von \lstinline{https://www.raspberrypi.org/} kostenlos
+  heruntergeladen und dann auf die SD-Karte für den Raspberry Pi überspielt
+  werden.
 
-  \paragraph{I2C Software} Zuerst wird die Software zum Ansteuern des PWM-Moduls installiert:
+  \paragraph{I2C Software} Zuerst wird die Software zum Ansteuern des PWM-Moduls
+  installiert:
     \begin{lstlisting}[language=sh]
 sudo apt-get update
 sudo apt-get install python-smbus
@@ -109,8 +134,8 @@ sudo apt-get install i2c-tools
     \end{lstlisting}
 
     Dann muss \lstinline{/etc/modprobe.d/raspi-blacklist.conf} überprüft werden.
-    Falls die Datei die Zeile \lstinline{blacklist i2c-bcm2708} enthält, mit \lstinline{#}
-    auskommentieren.
+    Falls die Datei die Zeile \lstinline{blacklist i2c-bcm2708} enthält, mit
+    \lstinline{#} auskommentieren.
     Nun noch in \lstinline{/etc/modules} die Zeilen
     \begin{lstlisting}
 i2c-dev
@@ -119,11 +144,12 @@ i2c-bcm2708
 
     hinzufügen und den Raspberry Pi neustarten.
 
-    Jetzt wird der Adafruit 16 Channel Servo Driver an die GPIO-Pins des Raspberry Pis
-    angeschlossen.
-    Mithilfe von \lstinline{sudo i2cdetect -y 0} bzw. \lstinline{sudo i2cdetect -y 1} (je nach
-    Baureihe des Raspberry Pis) kann die Verbindung zwischen dem Servo Driver und dem Raspberry Pi
-    überprüft werden.\cite{adafruitlearn}
+    Jetzt wird der Adafruit 16 Channel Servo Driver an die GPIO-Pins des
+    Raspberry Pis angeschlossen.
+    Mithilfe von \lstinline{sudo i2cdetect -y 0} bzw.
+    \lstinline{sudo i2cdetect -y 1} (je nach Baureihe des Raspberry Pis) kann
+    die Verbindung zwischen dem Servo Driver und dem Raspberry Pi überprüft
+    werden.\cite{adafruitlearn}
 
   \paragraph{Sturo} Nun richten wir das Programm zur Steuerung des RC-Autos ein.
 
@@ -135,46 +161,151 @@ cd sturo
 chmod +x sturo_start.sh
     \end{lstlisting}
 
-    Das Programm Sturo benötigt Python 2.7 und muss für Funktionen wie Sensoren privilegiert
-    ausgeführt werden.
+    Das Programm Sturo benötigt Python 2.7 und muss für Funktionen wie Sensoren
+    privilegiert ausgeführt werden.
     Nun soll der Raspberry Pi Sturo direkt nach dem Bootvorgang ausführen.
 
-    Dazu editiert man die Datei \lstinline{/etc/inittab}, sodass der Login beim Booten automatisch
-    ausgeführt wird:
+    Dazu editiert man die Datei \lstinline{/etc/inittab}, sodass der Login beim
+    Booten automatisch ausgeführt wird:
 
-    Die Zeile \lstinline{1:2345:respawn:/sbin/getty 115200 tty1} wird mit \lstinline{#}
-    auskommentiert.
+    Die Zeile \lstinline{1:2345:respawn:/sbin/getty 115200 tty1} wird mit
+    \lstinline{#} auskommentiert.
     Dann kann man direkt darunter in einer neuen Zeile diesen Code einfügen:
     \begin{lstlisting}
 1:2345:respawn:/bin/login -f pi tty1 </dev/tty1 >/dev/tty1 2>&1
     \end{lstlisting}
-    Beim Login ist man nun als Benutzer \lstinline{Pi} eingeloggt.\cite{opentech}
+    Beim Login ist man nun als Benutzer \lstinline{Pi} eingeloggt.
+    \cite{opentech}
 
-    Jetzt wird die Skriptdatei aufgerufen, indem am Ende der Datei \lstinline{/etc/profile} die
-    Zeile
+    Jetzt wird die Skriptdatei aufgerufen, indem am Ende der Datei
+    \lstinline{/etc/profile} die Zeile
     \begin{lstlisting}
 . /home/pi/sturo/sturo_start.sh
     \end{lstlisting}
     eingefügt wird.
 
-    Damit Sturo erweiterte Funktionen benutzen kann, muss es privilegiert mithilfe von
-    \lstinline{sudo} ausgeführt werden.
-    Hier wird momentan unter Umständen noch nach einem Passwort gefragt, sodass sich das Programm
-    nicht automatisch startet.
+    Damit Sturo erweiterte Funktionen benutzen kann, muss es privilegiert
+    mithilfe von \lstinline{sudo} ausgeführt werden.
+    Hier wird momentan je nach Betriebssystem noch nach einem Passwort gefragt,
+    sodass sich das Programm nicht automatisch startet.
 
-    Um dies zu umgehen, können wir das \lstinline{setuid bit} auf den Nutzer \lstinline{root} setzen
-    oder die \lstinline{/etc/sudoers} Datei mithilfe von \lstinline{visudo} editieren und folgende
-    Zeile an das Ende fügen:
+    Um dies zu umgehen, können wir das \lstinline{setuid bit} auf den Nutzer
+    \lstinline{root} setzen oder die \lstinline{/etc/sudoers} Datei mithilfe von
+    \lstinline{visudo} editieren und folgende Zeile an das Ende fügen:
     \begin{lstlisting}
 pi ALL=NOPASSWD: /usr/bin/python
     \end{lstlisting}
 
-    Nun wird beim Ausführen von Python mit \lstinline{sudo} nicht mehr nach dem Passwort gefragt.
+    Nun wird beim Ausführen von Python mit \lstinline{sudo} nicht mehr nach dem
+    Passwort gefragt.
 
-    Das führt in Kombination mit dem Auto-Login zu einem sehr unsicheren System, was für dieses
-    Projekt aber erstmal unwichtig ist.
+    Das führt in Kombination mit dem Auto-Login zu einem sehr unsicheren System,
+    was für dieses Projekt aber erstmal unwichtig ist.
 
-\section{Code-Stuffz}
+\section{Sturo Software Implementierung}
+
+  \subsection{Externer Sourcecode}
+    Sturo benutzt die Module \lstinline{adafruit_servo_driver} und
+    \lstinline{adafruit_i2c} für Python, welche eine grundlegende Ansteuerung
+    des Servo Drivers ermöglichen. \cite{adafruitlearn}
+
+    Weiterhin wurde das Modul \lstinline{usonic} eingebunden, um die Messdaten
+    aus dem Ultraschallsensor abzulesen. \cite{ultrasonic}
+
+    Der Code dieser Module ist unter \lstinline{src/lib} zu finden.
+
+  \subsection{ServoControl}
+
+    Das \lstinline{src/ServoControl} Modul abstrahiert die Arbeit mit der PWM.
+
+    Es enthält zum einen die Klasse \lstinline{SummitPWM}, die die Attribute des
+    Adafruit Servo Drivers festlegt und anhand eines übergebenen
+    \lstinline{Servo} die Pulslänge zur Ansteuerung des Servos ändern kann,
+    indem es mit diesem Servo Drivers kommuniziert.
+
+    Zum anderen ist dort die Klasse \lstinline{Servo} zu finden, die einen
+    spezifischen Servo repräsentiert.
+    Dort wird festgelegt, wie dieser Servo angesprochen wird:
+    \begin{lstlisting}
+class Servo(object):
+  """Represents a pwm-controlled servo"""
+
+  def __init__(self):
+    self.range_min = 219   # 1ms wide pulse
+    self.range_max = 438   # 2ms wide pulse
+    self.pwm_port = 0   # The port the servo can be accessed from
+
+  [...]
+    \end{lstlisting}
+
+    Für jeden Servo wird eine eigene Klasse definiert, die von \lstinline{Servo}
+    erbt und dessen Attribute anpasst.
+    So wird für die vordere Differentialsperre die Klasse \lstinline{FrontLocker}
+    definiert.
+    Hier wird der Port gesetzt der den Adafruit Servo Driver mit diesem Servo
+    verbindet.
+    Außerdem wird die maximale und minimale Pulslänge eingeschränkt, weil die
+    Mechanik der vorderen Differentialsperre nicht auf die volle Bewegung des
+    Servos ausgelegt ist.
+    \begin{lstlisting}
+[...]
+class FrontLocker(Servo):
+    """The front locker servo of the Summit"""
+    def __init__(self):
+        super(FrontLocker, self).__init__()
+        self.pwm_port = 9
+        # This servos movement is quite restricted
+        self.pwm_range_adjust(0.7, 0.9)
+[...]
+    \end{lstlisting}
+
+  \subsection{CarAttributes}
+
+    Die Klasse \lstinline{CarAttributes} abstrahiert die Kontrolle der Traxxas
+    Summit Servos weiter indem die Kontrolle der einzelnen Servos in
+    allgemeinere Methoden gepackt werden und die Parameter sinnvoll angepasst
+    werden.
+
+    So gibt es eine Methode, die die Lenkung des Autos steuert.
+    Da die Reifenauslenkung von zwei Servos gleichzeitig gesteuert werden
+    (eines für jedes der frontalen Räder) steuert diese Methode gleich zwei der
+    Servos an.
+    Statt eines Parameters mit dem Wert zwischen 0 (minimale Pulslänge) und 1
+    (maximale Pulslänge) zu erwarten, erwartet diese Funktion einen Winkel:
+    Eine Float zwischen -45 und 45:
+    \begin{lstlisting}
+[...]
+    def set_steering(self, angle):
+        """Changes the angle of the wheels
+
+        Arguments:
+        angle -- between -45 and 45
+        """
+        val = (float(angle) + 45) / 90
+        self.pwm.servo_set(self.servo_steering1, val)
+        self.pwm.servo_set(self.servo_steering2, val)
+[...]
+    \end{lstlisting}
+
+  \subsection{Driver}
+
+    In den bisher genannten Code-Segmenten wurde die Operation des Autos
+    abstrahiert.
+    Die Klasse \lstinline{Driver} soll dagegen beweisen, dass mithilfe der
+    bisher eingeführten Methoden eine einfache Automatisierung des Autos
+    möglich ist.
+    Es benutzt die Klasse \lstinline{CarAttributes}, um die Mechanik des Autos
+    zu kontrollieren.
+
+    Die Methode \lstinline{evaluate} liest einen Wert aus dem Ultraschallsensor
+    aus.
+    Basierend darauf wird ein \lstinline{Mode} gesetzt, der die nächste Aktion
+    des Autos angibt, zum Beispiel \lstinline{Mode.REVERSE}.
+
+    Die Methode \lstinline{drive} ruft dann, anhand des Moduses der in
+    \lstinline{evaluate} generiert wird, die entsprechenden Operationen auf
+    damit der Traxxas Summit angemessen auf die von den Servos erhaltenen
+    Informationen reagiert.
 
 \section{Herausforderungen}
 
@@ -196,6 +327,9 @@ I2C      Inter-Integrated Circuit
   \bibitem{adafruitmod}
     https://www.adafruit.com/product/815,
     Zuletzt erreicht am: 27.11.2015
+  \bibitem{ultrasonic}
+    http://www.bytecreation.com/blog/2013/10/13/raspberry-pi-ultrasonic-sensor-hc-sr04,
+    Zuletzt erreicht am: 28.11.2015
 \end{thebibliography}
 
 \end{document}

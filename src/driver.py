@@ -1,5 +1,6 @@
 import car_attributes
 import time
+import lib.usonic as usonic
 
 class Driver(object):
 
@@ -33,7 +34,16 @@ class Driver(object):
             self.drive(mode)
 
     def evaluate(self):
-        return self.Mode.FORWARD
+        # Read a value from the ultrasonic sensor
+        uval = usonic.reading(0)
+        if uval > 40:
+            return self.Mode.FORWARD
+        elif uval > 30:
+            return self.Mode.SLIGHT_ADJUST_RIGHT
+        elif uval > 12:
+            return self.Mode.ADJUST_RIGHT
+        else:
+            return self.Mode.REVERSE
 
     def drive(self, mode):
         if mode == self.Mode.FORWARD:
@@ -63,7 +73,7 @@ class Driver(object):
         time.sleep(3)
 
     def figure_eight(self):
-	while(True):
+    	while(True):
             self.car_attributes.set_speed(self.Speed.FAST)
             self.car_attributes.set_steering(45)
             time.sleep(3.3)
