@@ -104,9 +104,9 @@ Port 10   Hintere Differentialsperre
       \caption{Der Spannungswandler mit Micro-USB Anschluss links abgehend}
     \end{figure}
 
-    Der Spannungswandler wandelt die Spannung (ungefähr 6V), die der BEC aus den
-    Akkus des Autos den Servos zur Verfügung stellt, in eine für den
-    Raspberry Pi nutzbare Spannung (5V) um.
+    Der Spannungswandler wandelt die Spannung (ungefähr 6V \cite{traxxasspecs}),
+    die der BEC aus dem Akkus des Autos den Servos zur Verfügung stellt, in eine
+    für den Raspberry Pi nutzbare Spannung (5V) um.
 
     Im Projekt haben wir den BenQ DC 12V to 5V/3.3V Converter benutzt.
     Der 12V-Eingang wird an einen \lstinline{V+}-Anschluss am Servo Driver
@@ -179,7 +179,8 @@ i2c-bcm2708
     die Verbindung zwischen dem Servo Driver und dem Raspberry Pi überprüft
     werden.\cite{adafruitlearn}
 
-  \paragraph{Sturo} Nun richten wir das Programm zur Steuerung des RC-Autos ein.
+  \paragraph{Sturo} Nun richten wir das Programm zur Steuerung des Fahrzeuges
+    ein.
 
     Die aktuelle Version des Programmes befindet sich momentan auf Github:
 
@@ -191,7 +192,8 @@ chmod +x sturo_start.sh
 
     Das Programm Sturo benötigt Python 2.7 und muss für Funktionen wie Sensoren
     privilegiert ausgeführt werden.
-    Nun soll der Raspberry Pi Sturo direkt nach dem Bootvorgang ausführen.
+    Der Raspberry Pi soll Sturo direkt nach dem Bootvorgang ausführen, damit
+    das Fahrzeug auch ohne Tastatur \& Bildschirm kontrolliert werden kann.
 
     Dazu editiert man die Datei \lstinline{/etc/inittab}, sodass der Login beim
     Booten automatisch ausgeführt wird:
@@ -275,6 +277,7 @@ class Servo(object):
     Außerdem wird die maximale und minimale Pulslänge eingeschränkt, weil die
     Mechanik der vorderen Differentialsperre nicht auf die volle Bewegung des
     Servos ausgelegt ist.
+    \newpage
     \begin{lstlisting}
 [...]
 class FrontLocker(Servo):
@@ -299,8 +302,8 @@ class FrontLocker(Servo):
     (eines für jedes der frontalen Räder) steuert diese Methode gleich zwei der
     Servos an.
     Statt eines Parameters mit dem Wert zwischen 0 (minimale Pulslänge) und 1
-    (maximale Pulslänge) zu erwarten, erwartet diese Funktion einen Winkel:
-    Eine Float zwischen -45 und 45:
+    (maximale Pulslänge) zu erwarten, erwartet diese Funktion einen Winkel,
+    eine Float zwischen -45 und 45:
     \begin{lstlisting}
 [...]
     def set_steering(self, angle):
@@ -371,8 +374,9 @@ class FrontLocker(Servo):
     Sobald die Spannung stark abfällt, kann es sein dass die
     Spannungsschwankungen zu stark werden und der Raspberry Pi abstürzt.
     Außerdem hat er keinen Ausschaltknopf, sodass man ohne extra Hardware
-    gezwungen ist die Stromzufuhr der Akkus abzuschalten und den Pi damit auch
-    abstürzen lässt, weil man Ihn nicht sauber herunterfahren lassen kann.
+    gezwungen ist die Stromzufuhr des Fahrzeuges durch die Akkus abzuschalten
+    und den Pi damit auch abstürzen lässt, weil man Ihn nicht sauber
+    herunterfahren lassen kann.
 
     Dies hat einmal dazu geführt, dass das Betriebssystem von der SD-Karte nicht
     mehr gebootet hat und alle 3 Backups entweder bereits korrumpiert waren
