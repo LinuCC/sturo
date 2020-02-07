@@ -33,9 +33,9 @@ Rx : Receiver (for example Traxxas Link)
 
 Servo-connectors have three wires:
 
- * +
- * -
- * S
+ * `+`
+ * `-`
+ * `S`
 
 Servos are controlled by PWM (Pulse width modulation). Two wires supply the
 Servo with a DC power supply and one (The "Signal" or S) controls the Servo
